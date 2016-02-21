@@ -1,0 +1,2 @@
+# modify-vim-config
+源自spf13-vim，暂时改了主题为solarized light,light主题时括号看不太清楚，经过排除是因为使用了rainbow主题可能没有调好的原因，换成rainbow_parentheses升级版得到了解决
