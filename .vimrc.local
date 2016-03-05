@@ -1,0 +1,103 @@
+
+" s: 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
+
+nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
+
+" g: 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能
+
+nnoremap  <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
+
+" d: 查找本函数调用的函数
+
+nnoremap  <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
+
+" c: 查找调用本函数的函数
+
+nnoremap  <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
+
+" t: 查找指定的字符串
+
+nnoremap  <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
+
+" e: 查找egrep模式，相当于egrep功能，但查找速度快多了
+
+nnoremap  <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
+
+" f: Find this file
+
+nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
+
+" i: 查找包含本文件的文件
+
+nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
+
+"fa弹出菜单，l显示窗口
+nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+nnoremap <leader>l :call ToggleLocationList()<CR>
+
+"ranbow
+
+nmap<F4> :cn<cr>
+
+nmap <F3> :cp<cr>
+"setcscopequickfix=s-,c-,d-,i-,t-,e-
+
+"如果发现有out文件则自动加载，不用手动加载了,手动命令
+":cs add /usr/src/linux/cscope.out /usr/src/linux
+if filereadable("cscope.out")
+    cs add csope.out .
+elseif $CSCOPE_DB  != ""
+    cs add $CSCOPE_DB
+endif
+syntax enable
+"set background=light
+"colorscheme solarized
+
+"Bundle 'kien/rainbow_parentheses.vim'
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+" 不加入这行, 防止黑色括号出现, 很难识别
+" \ ['black',       'SeaGreen3'],
+
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+
+"airline相关设置
+"let g:airline_theme="luna" 
+
+"这个是安装字体后 必须设置此项" 
+let g:airline_powerline_fonts = 1   
+
+ "打开tabline功能,方便查看Buffer和切换，这个功能比较不错"
+ "我还省去了minibufexpl插件，因为我习惯在1个Tab下用多个buffer"
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#buffer_nr_show = 1
+
+ "设置切换Buffer快捷键"
+ nnoremap <C-l> :bn<CR>
+ nnoremap <C-h> :bp<CR>
+
+ " 关闭状态显示空白符号计数,这个对我用处不大"
+ let g:airline#extensions#whitespace#enabled = 0
+ let g:airline#extensions#whitespace#symbol = '!'
