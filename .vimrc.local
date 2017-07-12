@@ -1,59 +1,47 @@
-
-" s: 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
-
-nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
-
-" g: 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能
-
-nnoremap  <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
-
-" d: 查找本函数调用的函数
-
-nnoremap  <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
-
-" c: 查找调用本函数的函数
-
-nnoremap  <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
-
-" t: 查找指定的字符串
-
-nnoremap  <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
-
-" e: 查找egrep模式，相当于egrep功能，但查找速度快多了
-
-nnoremap  <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
-
-" f: Find this file
-
-nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
-
-" i: 查找包含本文件的文件
-
-nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
-
 "fa弹出菜单，l显示窗口
 nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
 nnoremap <leader>l :call ToggleLocationList()<CR>
-
+" 用Cscope自己的话说 - "你可以把它当做是超过频的ctags"
+if has("cscope")
+    "设定可以使用 quickfix 窗口来查看 cscope 结果
+    set cscopequickfix=s-,c-,d-,i-,t-,e-
+    set csprg=/usr/local/bin/cscope
+    "使支持用 Ctrl+]  和 Ctrl+t 快捷键在代码间跳转
+    "set cscopetag
+    "如果你想反向搜索顺序设置为1,查找的时候优先查找cscope,如果没找到再找ctags
+    set cst  "将ctrl+]使用cscope
+    set csto=1
+    "在当前目录中添加任何数据库
+    if filereadable("cscope.out")
+        cs add cscope.out
+        "否则添加数据库环境中所指出的
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+    set cscopeverbose
+    "快捷键设置
+    " s: 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
+    nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
+    " g: 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能
+    nnoremap  <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
+    " d: 查找本函数调用的函数
+    nnoremap  <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
+    " c: 查找调用本函数的函数
+    nnoremap  <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
+    " t: 查找指定的字符串
+    nnoremap  <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
+    " e: 查找egrep模式，相当于egrep功能，但查找速度快多了
+    nnoremap  <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
+    " f: Find this file
+    nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
+    " i: 查找包含本文件的文件
+    nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
+endif
 "ranbow
 
-nmap<F4> :cn<cr>
 
-nmap <F3> :cp<cr>
-"setcscopequickfix=s-,c-,d-,i-,t-,e-
 
-"如果发现有out文件则自动加载，不用手动加载了,手动命令
-":cs add /usr/src/linux/cscope.out /usr/src/linux
-if filereadable("cscope.out")
-    cs add csope.out .
-elseif $CSCOPE_DB  != ""
-    cs add $CSCOPE_DB
-endif
-syntax enable
-"set background=light
-"colorscheme solarized
-
-"Bundle 'kien/rainbow_parentheses.vim'
+"Rainbow配置
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
     \ ['Darkblue',    'SeaGreen3'],
@@ -82,22 +70,255 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-
-"airline相关设置
-"let g:airline_theme="luna" 
-
 "这个是安装字体后 必须设置此项" 
-let g:airline_powerline_fonts = 1   
+"let g:airline_powerline_fonts = 1   
+"let g:tomato#lang = 'chinese'
 
  "打开tabline功能,方便查看Buffer和切换，这个功能比较不错"
  "我还省去了minibufexpl插件，因为我习惯在1个Tab下用多个buffer"
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#buffer_nr_show = 1
+ "let g:airline#extensions#tabline#enabled = 1
+ "let g:airline#extensions#tabline#buffer_nr_show = 1
 
  "设置切换Buffer快捷键"
- nnoremap <C-l> :bn<CR>
- nnoremap <C-h> :bp<CR>
+ "nnoremap <C-l> :bn<CR>
+ "nnoremap <C-h> :bp<CR>
 
  " 关闭状态显示空白符号计数,这个对我用处不大"
- let g:airline#extensions#whitespace#enabled = 0
- let g:airline#extensions#whitespace#symbol = '!'
+"let g:airline#extensions#whitespace#enabled = 0
+"let g:airline#extensions#whitespace#symbol = '!'
+
+
+ "Youcomplate配置
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py' "配置默认的ycm_extra_conf.py文件路径。
+"let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py' "配置默认的ycm_extra_conf.py文件路径。
+set completeopt=longest,menu	"让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif	"离开插入模式后自动关闭预览窗口
+inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"	"回车即选中当前项
+"上下左右键的行为 会显示其他信息
+inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
+inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
+inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
+inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
+" 跳转到定义处
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+"nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <F6> :YcmForceCompileAndDiagnostics<CR>	"force recomile with syntastic
+" nnoremap <leader>lo :lopen<CR>	"open locationlist
+" nnoremap <leader>lc :lclose<CR>	"close locationlist
+inoremap <leader><leader> <C-x><C-o>
+"关闭代检查 
+let g:ycm_enable_diagnostic_signs = 0
+let g:ycm_enable_diagnostic_highlighting = 0
+
+" 不显示开启vim时检查ycm_extra_conf文件的信息  
+let g:ycm_confirm_extra_conf=0
+" 开启基于tag的补全，可以在这之后添加需要的标签路径  
+let g:ycm_collect_identifiers_from_tags_files=1
+"注释和字符串中的文字也会被收入补全
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
+" 输入第2个字符开始补全
+let g:ycm_min_num_of_chars_for_completion=2
+" 禁止缓存匹配项,每次都重新生成匹配项
+let g:ycm_cache_omnifunc=0
+" 开启语义补全
+let g:ycm_seed_identifiers_with_syntax=1	
+"在注释输入中也能补全
+let g:ycm_complete_in_comments = 1
+"在字符串输入中也能补全
+let g:ycm_complete_in_strings = 1
+" 设置在下面几种格式的文件上屏蔽ycm
+let g:ycm_filetype_blacklist = {
+      \ 'tagbar' : 1,
+      \ 'nerdtree' : 1,
+      \}
+"youcompleteme  默认tab  s-tab 和 ultisnips 冲突
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
+" 修改对C函数的补全快捷键，默认是CTRL + space，修改为ALT + ;
+let g:ycm_key_invoke_completion = '<M-;>'
+
+"定义存放代码片段的文件夹，使用自定义和默认的，将会的到全局，有冲突的会提示
+"let g:UltiSnipsSnippetDirectories=["bundle/vim-snippets/UltiSnips"]
+
+" 参考https://github.com/Valloric/YouCompleteMe/issues/36#issuecomment-62941322
+" 解决ultisnips和ycm tab冲突，如果不使用下面的办法解决可以参考
+" https://github.com/Valloric/YouCompleteMe/issues/36#issuecomment-63205056的配置
+ let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
+ let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
+ let g:UltiSnipsExpandTrigger="<Tab>"
+ let g:UltiSnipsJumpForwardTrigger="<Tab>"                                           
+ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+ "UltiSnips completion function that tries to expand a snippet. If there's no
+ "snippet for expanding, it checks for completion window and if it's
+ "shown, selects first element. If there's no completion window it tries to
+ "jump to next placeholder. If there's no placeholder it just returns TAB key 
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+
+au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
+" Expand snippet or return
+let g:ulti_expand_res = 1
+function! Ulti_ExpandOrEnter()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res
+        return ''
+    else
+        return "\<return>"
+endfunction
+
+" Set <space> as primary trigger
+inoremap <return> <C-R>=Ulti_ExpandOrEnter()<CR>
+"错误符号显示 
+let g:ycm_error_symbol = '>>'
+let g:ycm_warning_symbol = '>*'
+"错误窗口
+"nmap <F5> :YcmDiags<CR>
+
+"提示
+"跳转到声明
+"nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+"跳转到定义
+"nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+"两者的合体
+"nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+"superTable配置
+"let g:SuperTabDefaultCompletionType="context" 
+
+"powerline
+ set guifont=PowerlineSymbols\ for\ Powerline "set nocompatible
+ set t_Co=256
+ let g:Powerline_symbols = 'unicode'
+ let g:Powerline_theme='short'
+ let g:Powerline_colorscheme='solarized256_light'
+ set laststatus=2
+ set nocompatible
+ let g:minBufExplForceSyntaxEnable = 1
+ set noshowmode
+
+"syntastic推荐配置
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+
+
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+" Trigger a highlight only when pressing f and F.
+let g:qs_highlight_on_keys = ['f', 'F']
+
+"Ack.vim map-key
+map <F4> :Ack -i --cpp 
+map <F3> :Ack -i --lua 
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+"函数浏览
+"nmap <F5> :CtrlPMRU<CR>
+nmap <F1> :CtrlPBuffer<CR>
+nmap <F2> :CtrlPFunky<Cr>
+
+"ctrl-funky
+" 搜索当前光标下单词对应的函数
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_syntax_highlight = 1
+
+
+"tagbar打开自动把窗口切换过去，避免重复按ctrl+w
+
+" TagBar {
+if isdirectory(expand("~/.vim/bundle/tagbar/"))
+    nnoremap <silent> <leader>tt :TagbarOpenAutoClose<CR>
+endif
+"}
+
+
+"EasyMontion配置
+let g:EasyMotion_smartcase = 1
+"let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
+map F <Plug>(easymotion-linebackward)
+map f <Plug>(easymotion-lineforward)
+" 重复上一次操作, 类似repeat插件, 很强大
+" <Leader>f{char} to move to {char}
+
+"quickfix 切换
+
+ nnoremap <F5> :cn<CR>
+ nnoremap <F6> :cp<CR>
+
+
+"支持ctrl+c ctrl+v
+nnoremap <c-c> "+y
+nnoremap <c-v> "+p
+
+vmap <C-c> "py
+nmap <C-c> "pyiw
+vmap <C-p> "pp
+nmap <C-p> "pP
+imap <C-p> <Esc>"ppa"
+
+set fileencodings=utf-8,gb18030,gbk,gb2312,big5
+
+"复制当前文件名到剪切板
+function GetCurFilePath()
+    "let cur_dir=getcwd()
+    let cur_file_name=getreg('%')
+    "let dir_filename=cur_dir."\".cur_file_name
+    "echo dir_filename."         done"
+    call setreg('+',cur_file_name)
+endfunction
+
+nnoremap <silent> <F9> : call GetCurFilePath()<cr>
+
+"end 复制当前文件名到剪切板
+"
+"airline设置
+"if !exists('g:airline_symbols')
+    "let g:airline_symbols = {}
+"endif
+"let g:airline_left_sep = '▶'
+"let g:airline_left_alt_sep = '❯'
+"let g:airline_right_sep = '◀'
+"let g:airline_right_alt_sep = '❮'
+"let g:airline_symbols.linenr = '¶'
+"let g:airline_symbols.branch = '⎇'
+
+"" 是否打开tabline
+"let g:airline#extensions#tabline#enabled = 0
+"
+nmap <leader>lv :lv /<c-r>=expand("<cword>")<cr>/ %<cr>:lw<cr>
+let g:Powerline_stl_path_style = 'full'
+
+"运行python 程序 
+map <f8> :w<cr>:!python %<cr>
+"Golang go to define
+map <f10> :GoDef<cr>
+"关闭忽略大小写
+"set noic
+"关闭生成swap文件
+set nobackup       " no backup files
+set noswapfile     " no swap files
+set nowritebackup  " only in case you don't want a backup file while editing
+"set noundofile     " no undo files
+
+"关闭自动折叠
+set nofoldenable
+
+
