@@ -101,8 +101,8 @@ inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDow
 inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 " 跳转到定义处
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-"nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
-"nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F6> :YcmForceCompileAndDiagnostics<CR>	"force recomile with syntastic
 " nnoremap <leader>lo :lopen<CR>	"open locationlist
@@ -149,7 +149,7 @@ let g:ycm_key_invoke_completion = '<M-;>'
  let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
  let g:UltiSnipsExpandTrigger="<Tab>"
  let g:UltiSnipsJumpForwardTrigger="<Tab>"                                           
- let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+ "let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
  "UltiSnips completion function that tries to expand a snippet. If there's no
  "snippet for expanding, it checks for completion window and if it's
  "shown, selects first element. If there's no completion window it tries to
@@ -229,6 +229,8 @@ map <F3> :Ack -i --lua
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
+let g:ackhighlight = 1
+"let g:ack_autoclose = 1
 
 "函数浏览
 "nmap <F5> :CtrlPMRU<CR>
@@ -239,6 +241,8 @@ nmap <F2> :CtrlPFunky<Cr>
 " 搜索当前光标下单词对应的函数
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
+" 按文件名搜索，这个比较适合我
+let g:ctrlp_by_filename = 1
 
 
 "tagbar打开自动把窗口切换过去，避免重复按ctrl+w
@@ -321,4 +325,83 @@ set nowritebackup  " only in case you don't want a backup file while editing
 "关闭自动折叠
 set nofoldenable
 
+"关闭go-lang对vim版本的警告
+let g:go_version_warning = 0
 
+"速度更快
+set re=1
+set ttyfast
+set lazyredraw
+
+set rtp+=/usr/local/opt/fzf
+" If installed using git
+set rtp+=~/.fzf
+nnoremap <silent> <Leader>f :Files<CR>
+nnoremap <silent> <C-p> :Files<CR>
+
+"ctrlp 后续配置，解决了报错
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+
+let g:ctrlp_cmd = 'CtrlPMixed'               " search anything (in files, buffers and MRU files at the same time.)
+let g:ctrlp_by_filename = 1
+let g:ctrlp_working_path_mode = 'ra'         " search for nearest ancestor like .git, .hg, and the directory of the current file
+let g:ctrlp_match_window_bottom = 1          " show the match window at the top of the screen
+let g:ctrlp_max_height = 10                  " maxiumum height of match window
+let g:ctrlp_switch_buffer = 'Et'             " jump to a file if it's open already
+let g:ctrlp_use_caching = 1                  " enable caching
+let g:ctrlp_clear_cache_on_exit=1            " speed up by not removing clearing cache evertime
+let g:ctrlp_mruf_max = 250                   " number of recently opened files
+let g:ctrlp_open_new_file = 't'
+let g:ctrlp_open_multiple_files = 't'
+let g:ctrlp_open_new_file = 'r'
+let g:ctrlp_custom_ignore = {
+            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.build|github.com|labix.org|bin|pkg)$',
+            \ 'file': '\v(\.exe|\.so|\.dll|\.a|\.out|gs|gw|gm|tags|gotags|\/U)$',
+            \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+            \ }
+let g:ctrlp_buftag_types = {
+            \ 'go'         : '--language-force=go --golang-types=ftv',
+            \ 'as'         : '--language-force=actionscript --actionscript-types=fpvc',
+            \ 'actionscript': '--language-force=actionscript --actionscript-types=fpvc',
+            \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
+            \ 'markdown'   : '--language-force=markdown --markdown-types=hik',
+            \ 'objc'       : '--language-force=objc --objc-types=mpci',
+            \ 'rc'         : '--language-force=rust --rust-types=fTm'
+            \ }
+let g:ctrlp_prompt_mappings = {
+            \ 'PrtBS()':              ['<bs>', '<c-]>'],
+            \ 'PrtDelete()':          ['<del>'],
+            \ 'PrtDeleteWord()':      ['<c-w>'],
+            \ 'PrtClear()':           ['<c-u>'],
+            \ 'PrtSelectMove("j")':   ['<c-j>', '<down>'],
+            \ 'PrtSelectMove("k")':   ['<c-k>', '<up>'],
+            \ 'PrtSelectMove("t")':   ['<Home>', '<kHome>'],
+            \ 'PrtSelectMove("b")':   ['<End>', '<kEnd>'],
+            \ 'PrtSelectMove("u")':   ['<PageUp>', '<kPageUp>'],
+            \ 'PrtSelectMove("d")':   ['<PageDown>', '<kPageDown>'],
+            \ 'PrtHistory(-1)':       ['<c-n>'],
+            \ 'PrtHistory(1)':        ['<c-p>'],
+            \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
+            \ 'AcceptSelection("h")': ['<c-x>', '<c-cr>', '<c-s>'],
+            \ 'AcceptSelection("t")': ['<c-t>'],
+            \ 'AcceptSelection("v")': ['<c-v>', '<RightMouse>'],
+            \ 'ToggleFocus()':        ['<s-tab>'],
+            \ 'ToggleRegex()':        ['<c-r>'],
+            \ 'ToggleByFname()':      ['<c-d>'],
+            \ 'ToggleType(1)':        ['<c-f>', '<c-up>'],
+            \ 'ToggleType(-1)':       ['<c-b>', '<c-down>'],
+            \ 'PrtExpandDir()':       ['<tab>'],
+            \ 'PrtInsert("c")':       ['<MiddleMouse>', '<insert>'],
+            \ 'PrtInsert()':          ['<c-\>'],
+            \ 'PrtCurStart()':        ['<c-a>'],
+            \ 'PrtCurEnd()':          ['<c-e>'],
+            \ 'PrtCurLeft()':         ['<c-h>', '<left>', '<c-^>'],
+            \ 'PrtCurRight()':        ['<c-l>', '<right>'],
+            \ 'PrtClearCache()':      ['<F5>'],
+            \ 'PrtDeleteEnt()':       ['<F7>'],
+            \ 'CreateNewFile()':      ['<c-y>'],
+            \ 'MarkToOpen()':         ['<c-z>'],
+            \ 'OpenMulti()':          ['<D-o>'],
+            \ 'PrtExit()':            ['<esc>', '<c-c>', '<c-g>'],
+            \ }
